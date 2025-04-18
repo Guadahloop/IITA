@@ -28,73 +28,19 @@
 # c) Modificar los datos de los alumnos
 # d) Agregar alumnos
 # e) Expulsar alumnos
-# f) Dar Persistencia a los Datos del programa mediante la implementación Archivos
 
 
-<<<<<<< HEAD
-def guardar_alumnos():
-    with open("Alumnos.txt", "w") as file:
-        for alumno in datos["Alumnos"]:
-            file.write(f"Nombre: {alumno['Nombre']}\n")
-            file.write(f"Apellido: {alumno['Apellido']}\n")
-            file.write(f"DNI: {alumno['DNI']}\n")
-            file.write(f"Fecha de nacimiento: {alumno['Fecha de nacimiento']}\n")
-            file.write(f"Tutor: {alumno['Tutor']}\n")
-            
-            notas_str = ", ".join(str(nota) for nota in alumno["Notas"])
-            file.write(f"Notas: {notas_str}\n")
-            
-            file.write(f"Faltas: {alumno['Faltas']}\n")
-            file.write(f"Amonestaciones: {alumno['Amonestaciones']}\n")
-            file.write("\n")
-=======
->>>>>>> bd0e4698df2d93a2507c25cc733b425d01e28927
 
-def lista_alumnos():
-    datos = {"Alumnos": []}
-    with open("Alumnos.txt", "r") as file:
-        alumno = {}
-        for linea in file:
-            linea = linea.replace("\n", "")
 
-            if linea == "":
-                if alumno:
-                    datos["Alumnos"].append(alumno)
-                    alumno = {}
-            else:
-                separador = linea.find(": ")
-                if separador != -1:
-                    clave = linea[:separador]
-                    valor = linea[separador + 2:]
-                    
-                    if clave == "Notas" or clave == "Faltas" or clave == "Amonestaciones":
-                        valores_numericos = []
-                        acumulador = ""
 
-                        for caracter in valor:
-                            if caracter in "0123456789":
-                                acumulador += caracter
-                            elif caracter == ",":
-                                if acumulador:
-                                    valores_numericos.append(int(acumulador))
-                                    acumulador = ""
-                        
-                        if acumulador:
-                            valores_numericos.append(int(acumulador))
 
-                        if clave == "Notas":
-                            alumno[clave] = valores_numericos
-                        else:
-                            alumno[clave] = valores_numericos[0] if valores_numericos else 0
-                    else:
-                        alumno[clave] = valor
+import random
 
-        if alumno:
-            datos["Alumnos"].append(alumno)
-
-    return datos
-
-datos = lista_alumnos()
+datos = {"Alumnos": [
+    {"Nombre": "Julian", "Apellido": "Perez", "DNI": "12345678", "Fecha de nacimiento": "01/01/2012", "Tutor": "Carlos Perez", "Notas": [], "Faltas": 0, "Amonestaciones": 0},
+    {"Nombre": "Maria", "Apellido": "Ibarra", "DNI": "87654321", "Fecha de nacimiento": "15/05/2012", "Tutor": "Ana Ibarra", "Notas": [], "Faltas": 0, "Amonestaciones": 0},
+    {"Nombre": "Pablo", "Apellido": "Ramirez", "DNI": "11223344", "Fecha de nacimiento": "20/09/2011", "Tutor": "Jose Ramirez", "Notas": [], "Faltas": 0, "Amonestaciones": 0}
+]}
 
 def agregar_alumno():
     nombre = input("Ingrese el nombre del alumno: ")
@@ -103,9 +49,9 @@ def agregar_alumno():
     fecha_nacimiento = input("Ingrese la fecha de nacimiento del alumno (DD/MM/AAAA): ")
     tutor = input("Ingrese el nombre del tutor del alumno: ")
 
-    notas = []
-    faltas = 0
-    amonestaciones = 0
+    notas = [random.choice(range(1, 11)) for i in range(3)]
+    faltas = random.choice(range(0, 26))
+    amonestaciones = random.choice(range(0, 26))
 
     alumno = {
         "Nombre": nombre,
@@ -119,83 +65,79 @@ def agregar_alumno():
     }
     datos["Alumnos"].append(alumno)
     print(f"Alumno {nombre} {apellido} agregado correctamente.")
-<<<<<<< HEAD
-    guardar_alumnos()
-=======
->>>>>>> bd0e4698df2d93a2507c25cc733b425d01e28927
-
 
 def mostrar_detalle_alumno():
     dni = input("Ingrese el DNI del alumno: ")
     for alumno in datos["Alumnos"]:
         if alumno["DNI"] == dni:
+          
             print(f"Nombre: {alumno['Nombre']} {alumno['Apellido']}")
             print(f"DNI: {alumno['DNI']}")
             print(f"Fecha de nacimiento: {alumno['Fecha de nacimiento']}")
             print(f"Tutor: {alumno['Tutor']}")
-            print(f"Notas: {alumno['Notas']}")
-            print(f"Faltas: {alumno['Faltas']}")
-            print(f"Amonestaciones: {alumno['Amonestaciones']}")
-            return
-    print("Alumno no encontrado.")
 
+            notas_random = [random.choice(range(1, 11)) for i in range(3)]
+            faltas_random = random.choice(range(0, 26))
+            amonestaciones_random = random.choice(range(0, 26))
+            print(f"Notas: {notas_random}")
+            print(f"Faltas: {faltas_random}")
+            print(f"Amonestaciones: {amonestaciones_random}")
+            return
+        
+    print("Alumno no encontrado.")
 
 def modificar_alumno():
     dni = input("Ingrese el DNI del alumno a modificar: ")
     modificaciones = {}
-
+    
     while True:
         campo = input("Ingrese el campo a modificar (o 'salir' para terminar): ")
-        if campo.lower() == 'salir':
+        if campo == 'salir':
             break
-
+        
         if campo in ["Nombre", "Apellido", "Fecha de nacimiento", "Tutor"]:
-            modificaciones[campo] = input(f"Ingrese el nuevo valor para {campo}: ")
+            nuevo_valor = input(f"Ingrese el nuevo valor para {campo}: ")
+            modificaciones[campo] = nuevo_valor
+        
         elif campo == "Notas":
             notas = []
             for i in range(3):
-                notas.append(int(input(f"Ingrese la nota {i + 1}: ")))
+                nota = int(input(f"Ingrese la nota {i+1}: "))
+                notas.append(nota)
             modificaciones["Notas"] = notas
-        elif campo == "Faltas" or campo == "Amonestaciones":
-            modificaciones[campo] = int(input(f"Ingrese el nuevo valor para {campo}: "))
+        
         else:
-            print("Campo inválido.")
-
+            print("Campo invalido.")
+    
     for alumno in datos["Alumnos"]:
         if alumno["DNI"] == dni:
             for campo, nuevo_valor in modificaciones.items():
                 alumno[campo] = nuevo_valor
+            
             print("Datos actualizados correctamente.")
-<<<<<<< HEAD
-            guardar_alumnos()
-=======
->>>>>>> bd0e4698df2d93a2507c25cc733b425d01e28927
             return
-
+    
     print("Alumno no encontrado.")
-
 
 def mostrar_alumnos():
     if not datos["Alumnos"]:
         print("No hay alumnos registrados.")
         return
-    for i, alumno in enumerate(datos["Alumnos"], 1):
+    i = 1
+    for alumno in datos["Alumnos"]:
         print(f"{i}. {alumno['Nombre']} {alumno['Apellido']} - DNI: {alumno['DNI']}")
-
+        i += 1
 
 def expulsar_alumno():
     dni = input("Ingrese el DNI del alumno a expulsar: ")
     for alumno in datos["Alumnos"]:
+        
         if alumno["DNI"] == dni:
             datos["Alumnos"].remove(alumno)
             print("Alumno expulsado correctamente.")
-<<<<<<< HEAD
-            guardar_alumnos()
-=======
->>>>>>> bd0e4698df2d93a2507c25cc733b425d01e28927
             return
+    
     print("Alumno no encontrado.")
-
 
 def menu():
     while True:
@@ -207,7 +149,7 @@ def menu():
         print("5. Expulsar alumno")
         print("6. Salir")
         opcion = input("Seleccione una opcion: ")
-
+        
         if opcion == "1":
             agregar_alumno()
         elif opcion == "2":
@@ -224,8 +166,4 @@ def menu():
         else:
             print("Opcion invalida. Intente nuevamente.")
 
-<<<<<<< HEAD
 menu()
-=======
-menu()
->>>>>>> bd0e4698df2d93a2507c25cc733b425d01e28927
